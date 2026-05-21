@@ -9,7 +9,7 @@ from collections import Counter
 # Charuco board parameters
 SQUARE = 0.007      # meters
 MARKER = 0.005      # meters
-SX, SY = 6, 6       # cols, rows
+SX, SY = 8, 8       # cols, rows
 
 DICT_CANDIDATES = [
     cv.aruco.DICT_4X4_50,
@@ -38,11 +38,9 @@ def detect_charuco(gray):
             continue
         ret, ch_corners, ch_ids = cv.aruco.interpolateCornersCharuco(
             corners, ids, gray, board)
-        
-        nro_ids = len(ch_ids)
 
-        if ret and ch_ids is not None and nro_ids >= MIN_CORNERS:
-            return d, ch_corners, ch_ids, nro_ids
+        if ret and ch_ids is not None and len(ch_ids) >= MIN_CORNERS:
+            return d, ch_corners, ch_ids, len(ch_ids)
         
     return None, None, None, 0 
 

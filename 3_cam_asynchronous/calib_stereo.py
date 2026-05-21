@@ -76,21 +76,17 @@ def stereo_calibrate(K_a, dist_a, files_a, K_b, dist_b, files_b, adict, board, i
 
     print(f"Valid pairs for stereo: {len(obj_stereo)}")
 
-    R, T, E, F = cv.Mat(), cv.Mat(), cv.Mat(), cv.Mat()
-    rms = cv.stereoCalibrate(
-        objectPoints  = obj_stereo,
-        imagePoints1  = img_stereo_a,
-        imagePoints2  = img_stereo_b,
-        cameraMatrix1 = K_a,
-        distCoeffs1   = dist_a,
-        cameraMatrix2 = K_b,
-        distCoeffs2   = dist_b,
-        imageSize     = img_size,
-        R             = R,
-        T             = T,
-        E             = E,
-        F             = F,
-        flags         = cv.CALIB_FIX_INTRINSIC)
+    rms, _, _, _, _, R, T, E, F = cv.stereoCalibrate(
+    objectPoints  = obj_stereo,
+    imagePoints1  = img_stereo_a,
+    imagePoints2  = img_stereo_b,
+    cameraMatrix1 = K_a,
+    distCoeffs1   = dist_a,
+    cameraMatrix2 = K_b,
+    distCoeffs2   = dist_b,
+    imageSize     = img_size,
+    flags         = cv.CALIB_FIX_INTRINSIC
+    )
 
     print(f"Stereo RPE {label}: {rms:.4f} px")
     return R, T, E, F, rms

@@ -26,7 +26,7 @@ from datetime import datetime
 import config
 
 try:
-    from pyk4a import PyK4A, Config, ColorResolution, DepthMode, WiredSyncMode
+    from pyk4a import PyK4A, Config, ColorControlCommand, ColorControlMode, ColorResolution, DepthMode, WiredSyncMode
 except ImportError:
     print("ERROR: pyk4a not installed: pip install pyk4a")
     sys.exit(1)
@@ -80,12 +80,21 @@ def main():
     )
 
     print("Initializing subordinate (device 1)...")
-    k4a_sub = PyK4A(config_sub, device_id=1)
+    k4a_sub = PyK4A(config_sub, device_id=0)
     k4a_sub.start()
 
     print("Initializing master (device 0)...")
-    k4a_mas = PyK4A(config_mas, device_id=0)
+    k4a_mas = PyK4A(config_mas, device_id=1)
     k4a_mas.start()
+
+    k4a_mas.exposure = 20000
+    k4a_sub.exposure = 20000
+
+    k4a_mas.gain = 64
+    k4a_sub.gain = 64
+
+    #k4a_mas.whitebalance = 6500
+    #k4a_sub.whitebalance = 6500
 
     print("Cameras ready.\n")
 
@@ -105,6 +114,8 @@ def main():
             if cap_mas.color is None or cap_sub.color is None:
                 continue
 
+            #frame0 = cap_mas.color[:, :, :3]
+            #frame1 = cap_mas.color[:, :, :3] 
             frame0 = cv2.cvtColor(cap_mas.color, cv2.COLOR_BGRA2BGR)
             frame1 = cv2.cvtColor(cap_sub.color, cv2.COLOR_BGRA2BGR)
 
